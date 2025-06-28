@@ -1,0 +1,23 @@
+{
+  "user_config": {
+    "user_points": {
+      "init_points": 0,
+      "invite_points": 1000
+    }
+  },
+  "app_settings": {
+    "debug": false,
+    "cors_origins": ["*"],
+    "api_prefix": "/api/v1",
+    "docs_url": "/docs",
+    "redoc_url": "/redoc"
+  },
+  "cache_settings": {
+    "ttl": 3600,
+    "max_size": 1000
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  }
+}

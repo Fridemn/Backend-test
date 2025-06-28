@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+tortoise-orm[asyncpg]
+asyncpg
+redis
+python-dotenv
+pydantic
+python-multipart
+psycopg2-binary
+colorlog
+PyJWT
+alibabacloud_dysmsapi20170525
