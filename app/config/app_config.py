@@ -4,7 +4,7 @@ from typing import Dict
 import logging
 
 from .constant import APP_CONFIG_PATH,DEFAULT_VALUE_MAP
-from .default import DEFAULT_CONFIG, get_postgres_config, get_redis_config, get_jwt_config, get_verification_code_config
+from .default import DEFAULT_CONFIG, get_postgres_config, get_redis_config, get_jwt_config, get_verification_code_config, get_cookie_config
 
 
 logger = logging.getLogger("app")
@@ -111,6 +111,8 @@ class AppConfig(dict):
             return get_jwt_config()
         elif item == 'verification_code_config':
             return get_verification_code_config()
+        elif item == 'cookie_config':
+            return get_cookie_config()
         
         # 其他配置从JSON文件读取
         try:

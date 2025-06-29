@@ -53,6 +53,19 @@ def get_jwt_config():
     }
 
 
+def get_cookie_config():
+    """动态获取Cookie配置，始终从环境变量读取"""
+    return {
+        "cookie_name": env_loader.get_env("COOKIE_NAME", "auth_token"),
+        "cookie_max_age": env_loader.get_env_int("COOKIE_MAX_AGE", 30 * 24 * 60 * 60),  # 30天，单位秒
+        "cookie_secure": env_loader.get_env_bool("COOKIE_SECURE", False),  # HTTPS环境设为True
+        "cookie_httponly": env_loader.get_env_bool("COOKIE_HTTPONLY", True),
+        "cookie_samesite": env_loader.get_env("COOKIE_SAMESITE", "lax"),  # lax, strict, none
+        "cookie_domain": env_loader.get_env("COOKIE_DOMAIN", None),  # 可以设置域名
+        "cookie_path": env_loader.get_env("COOKIE_PATH", "/"),
+    }
+
+
 def get_verification_code_config():
     """动态获取验证码配置，始终从环境变量读取"""
     return {

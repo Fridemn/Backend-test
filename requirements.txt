@@ -10,3 +10,4 @@ psycopg2-binary
 colorlog
 PyJWT
 alibabacloud_dysmsapi20170525
+pydantic[email]

@@ -1,5 +1,16 @@
 # 通用设计
 
+## 🆕 最新功能更新
+
+### Cookie认证功能
+- ✅ 自动设置HTTP-only安全cookie
+- ✅ 支持cookie和header双重认证方式
+- ✅ 登录/注册时自动设置认证cookie
+- ✅ 退出登录时自动清除cookie
+- ✅ 完整的安全配置选项（HttpOnly、Secure、SameSite等）
+
+详细说明请查看：[Cookie功能说明](docs/cookie功能说明.md)
+
 ## 快速开始
 
 ### 1. 安装依赖

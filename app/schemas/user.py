@@ -121,7 +121,38 @@ class UserReset(BaseModel):
         return value
 
 
+class UserProfileResponse(BaseModel):
+    """用户个人信息响应模型"""
+    user_id: str = Field(..., description="用户ID")
+    account: str = Field(..., description="账户名")
+    username: str = Field(..., description="用户名")
+    phone: Optional[str] = Field(None, description="手机号码")
+    points: int = Field(0, description="用户积分")
+    invitation_code: Optional[str] = Field(None, description="邀请码")
+    is_active: bool = Field(True, description="是否激活")
+    is_verified: bool = Field(False, description="是否验证")
+    created_at: str = Field(..., description="创建时间")
+    updated_at: str = Field(..., description="更新时间")
+    last_login: Optional[str] = Field(None, description="最后登录时间")
     
+    # 扩展信息
+    profile: Optional[dict] = Field(None, description="详细资料")
+    vip_info: Optional[dict] = Field(None, description="会员信息")
+
+
+class UserProfileUpdateRequest(BaseModel):
+    """用户信息更新请求模型"""
+    username: Optional[str] = Field(None, description="用户名", max_length=100)
+    nickname: Optional[str] = Field(None, description="昵称", max_length=100)
+    email: Optional[EmailStr] = Field(None, description="邮箱")
+    avatar: Optional[str] = Field(None, description="头像URL")
+    signature: Optional[str] = Field(None, description="个人签名")
+    gender: Optional[str] = Field(None, description="性别", max_length=10)
+    age: Optional[int] = Field(None, description="年龄", ge=1, le=150)
+    address: Optional[dict] = Field(None, description="地址信息")
+
+
+
 
 
 

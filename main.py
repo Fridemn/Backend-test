@@ -2,6 +2,7 @@
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
 import os
 
@@ -62,6 +63,10 @@ def create_app():
     # 注册路由
     app.include_router(api_user, prefix="/user", tags=["用户相关接口"])
     app.include_router(api_system, prefix="/system", tags=["系统相关接口"])
+    
+    # 挂载静态文件
+    if os.path.exists("static"):
+        app.mount("/static", StaticFiles(directory="static"), name="static")
     
     return app
 

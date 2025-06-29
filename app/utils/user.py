@@ -1,9 +1,9 @@
-
 import hashlib
 import string
 import secrets
 from datetime import datetime, timedelta
-from fastapi import HTTPException
+from fastapi import HTTPException, Request, Depends
+from typing import Optional
 import jwt
 import re
 import time
@@ -76,11 +76,39 @@ def md5(s):
 #         获取用户部分
 #------------------------------
 
+def get_token_from_request(request: Request) -> Optional[str]:
+    """从请求中获取token，优先从cookie获取，其次从Authorization header获取"""
+    cookie_config = app_config.cookie_config
+    cookie_name = cookie_config["cookie_name"]
+    
+    # 首先尝试从cookie获取
+    token = request.cookies.get(cookie_name)
+    if token:
+        return token
+    
+    # 其次尝试从Authorization header获取
+    authorization = request.headers.get("Authorization")
+    if authorization and authorization.startswith("Bearer "):
+        return authorization.split(" ")[1]
+    
+    return None
+
+
+async def get_current_user_from_request(request: Request):
+    """从请求中获取当前用户信息"""
+    token = get_token_from_request(request)
+    if not token:
+        raise HTTPException(status_code=401, detail="未提供认证信息")
+    
+    return get_current_user(token)
+
+
 # 获取当前用户信息
 def get_current_user(token: str):
-    # result = redis_client.get(token)
-    # if result == 'expired':
-    #     raise HTTPException(status_code=401, detail="Token 已失效")
+    # 检查token是否已被加入黑名单
+    result = redis_client.get(token)
+    if result == 'expired':
+        raise HTTPException(status_code=401, detail="Token 已失效")
     # 1. 解码JWT并获取数据
     data = decode_jwt(token)
     logger.debug("data:" + str(data))
@@ -91,6 +119,36 @@ def get_current_user(token: str):
 
     # 2. 返回当前用户对象
     return data
+
+
+# 获取用户信息（不检查黑名单，用于登录等场景）
+def get_user_from_token(token: str):
+    """
+    从token中获取用户信息，不检查黑名单
+    主要用于登录、注册等创建新token的场景
+    """
+    # 直接解码JWT并获取数据，不检查Redis黑名单
+    data = decode_jwt(token)
+    logger.debug("data:" + str(data))
+
+    if not data:
+        # 如果 token 无效或已过期，返回 401 错误
+        raise HTTPException(status_code=401, detail="Token 无效或已过期，请重新登录")
+
+    # 返回用户对象
+    return data
+
+
+async def get_user_from_request_without_blacklist(request: Request):
+    """
+    从请求中获取用户信息，不检查黑名单
+    用于获取个人信息等普通查询场景
+    """
+    token = get_token_from_request(request)
+    if not token:
+        raise HTTPException(status_code=401, detail="未提供认证信息")
+    
+    return get_user_from_token(token)
 
 
 async def get_code(phone: str, REDIS_PATH: str):
